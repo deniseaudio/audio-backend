@@ -1,0 +1,44 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id       Int    @id @default(autoincrement())
+  email    String @unique
+  username String @unique
+  password String
+}
+
+model Directory {
+  id        Int         @id @default(autoincrement())
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+  name      String
+  path      String      @unique
+  root      Boolean     @default(false)
+  children  Directory[] @relation("DirectoryChildren")
+  parent    Directory?  @relation("DirectoryChildren", fields: [parentId], references: [id])
+  parentId  Int?
+  songs     Song[]
+}
+
+model Song {
+  id          Int       @id @default(autoincrement())
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  title       String
+  length      Float
+  filename    String
+  codec       String
+  path        String    @unique
+  directory   Directory @relation(fields: [directoryId], references: [id])
+  directoryId Int
+}

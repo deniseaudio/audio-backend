@@ -1,0 +1,9 @@
+.cache
+.logs
+dist
+node_modules
+prisma/dev.db
+.env
+.env.example
+.eslintrc.json
+nodemon.json
