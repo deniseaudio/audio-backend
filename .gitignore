@@ -4,6 +4,7 @@ dist
 .cache
 .logs
 prisma/dev.db
+prisma/*.db-journal
 
 # local env files
 .env
