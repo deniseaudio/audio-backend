@@ -45,4 +45,28 @@ app.get("/", async (req, res) => {
   res.send("It's working ✨");
 });
 
+app.get("/stream/:songId/:bitrate/:fileName", async (req, res) => {
+  const { songId, bitrate, fileName } = req.params;
+
+  if (!songId || !bitrate) {
+    res.status(400).send("Invalid request");
+    return;
+  }
+
+  const songPath = path.join(
+    process.cwd(),
+    ".cache",
+    songId,
+    `${bitrate}kbps`,
+    fileName === "playlist" ? `${songId}-${bitrate}kbps.m3u8` : fileName
+  );
+
+  if (!fs.existsSync(songPath)) {
+    res.status(404).send("Song not found, please transcode it first.");
+    return;
+  }
+
+  res.status(200).sendFile(songPath);
+});
+
 app.use("/api", router);
