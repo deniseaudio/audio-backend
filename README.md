@@ -25,7 +25,7 @@
 
   ```shell
   docker run -p 3003:3000 \
-    --restart=on-failure
+    --restart=on-failure \
     -v /Users/example/Desktop/Music:/usr/src/app/media \
     -d totominc/deniseaudio-backend
   ```
