@@ -9,7 +9,11 @@ if (!fs.existsSync(CACHE_DIR)) {
   fs.mkdirSync(CACHE_DIR);
 }
 
-export function transcode(song: Song, bitrate: number): Promise<string> {
+export function transcode(
+  song: Song,
+  bitrate: number,
+  hlsTime: number = 30
+): Promise<string> {
   const playlistFilename = `${song.id}-${bitrate}kbps.m3u8`;
 
   const songFolder = path.join(CACHE_DIR, song.id.toString());
@@ -38,12 +42,13 @@ export function transcode(song: Song, bitrate: number): Promise<string> {
 
   return new Promise((resolve, reject) => {
     ffmpeg
+      .on("start", console.log)
       .on("end", () => resolve(playlistFile))
       .on("error", (err) => reject(err))
       .input(song.path)
-      .audioCodec("aac")
+      .audioCodec("libmp3lame")
       .audioBitrate(bitrate)
-      .addOutputOption(["-hls_time 30", "-hls_list_size 0"])
+      .addOutputOption([`-hls_time ${hlsTime}`, "-hls_list_size 0"])
       .save(playlistFile);
   });
 }
