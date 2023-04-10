@@ -26,7 +26,7 @@ router.route("/:id").get(async (req, res) => {
     return;
   }
 
-  const transcodedFilePath = await transcode(song, 320);
+  const transcodedFilePath = await transcode(song, 128);
 
   res.status(200).json({ hlsPlaylistFilePath: transcodedFilePath });
 });
