@@ -1,9 +1,11 @@
+/* eslint import/first: "off" */
 import dotenv from "dotenv";
+
+// Make sure to load the environment variables before importing any other file.
+dotenv.config();
 
 import { app } from "./api/express";
 import { walkRootDirectory } from "./indexer/walk";
-
-dotenv.config();
 
 app.listen(3000, () => {
   console.log("🚀 Server ready at: localhost:3000");

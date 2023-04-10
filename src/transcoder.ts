@@ -3,11 +3,7 @@ import path from "node:path";
 import type { Song } from "@prisma/client";
 import FluentFfmpeg from "fluent-ffmpeg";
 
-const CACHE_DIR = path.join(process.cwd(), ".cache");
-
-if (!fs.existsSync(CACHE_DIR)) {
-  fs.mkdirSync(CACHE_DIR);
-}
+import { CACHE_DIRECTORY } from "./cache";
 
 export function transcode(
   song: Song,
@@ -16,7 +12,7 @@ export function transcode(
 ): Promise<string> {
   const playlistFilename = `${song.id}-${bitrate}kbps.m3u8`;
 
-  const songFolder = path.join(CACHE_DIR, song.id.toString());
+  const songFolder = path.join(CACHE_DIRECTORY, song.id.toString());
   const bitrateFolder = path.join(songFolder, `${bitrate}kbps`);
   const playlistFile = path.join(bitrateFolder, playlistFilename);
 
@@ -24,8 +20,8 @@ export function transcode(
   const hasBitrateFolder = fs.existsSync(bitrateFolder);
 
   // Check if we have already done this transcoding.
-  // - Verify if we have `.cache/${song.id}` folder.
-  // - Verify if we have `.cache/${song.id}/${bitrate}kbps` folder.
+  // - Verify if we have `${CACHE_DIRECTORY}/${song.id}` folder.
+  // - Verify if we have `${CACHE_DIRECTORY}/${song.id}/${bitrate}kbps` folder.
   if (hasSongFolder && hasBitrateFolder) {
     return Promise.resolve(path.join(bitrateFolder, playlistFilename));
   }
@@ -42,7 +38,6 @@ export function transcode(
 
   return new Promise((resolve, reject) => {
     ffmpeg
-      .on("start", console.log)
       .on("end", () => resolve(playlistFile))
       .on("error", (err) => reject(err))
       .input(song.path)

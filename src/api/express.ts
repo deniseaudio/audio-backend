@@ -6,6 +6,7 @@ import helmet from "helmet";
 import bodyparser from "body-parser";
 import morgan from "morgan";
 
+import { CACHE_DIRECTORY } from "../cache";
 import { songsRouter } from "./songs/songs.routes";
 import { transcodeRouter } from "./transcode/transcode.routes";
 
@@ -54,8 +55,7 @@ app.get("/stream/:songId/:bitrate/:fileName", async (req, res) => {
   }
 
   const songPath = path.join(
-    process.cwd(),
-    ".cache",
+    CACHE_DIRECTORY,
     songId,
     `${bitrate}kbps`,
     fileName === "playlist" ? `${songId}-${bitrate}kbps.m3u8` : fileName
