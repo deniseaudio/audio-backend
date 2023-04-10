@@ -3,6 +3,7 @@ FROM node:18-alpine
 ARG GITHUB_NPM_TOKEN
 ARG DATABASE_URL
 ARG MUSIC_DIRECTORY
+ARG INDEXER_IGNORE_PATTERN
 
 # Create app directory.
 WORKDIR /usr/src/app
@@ -29,6 +30,7 @@ COPY tsconfig.json ./
 # Pass environment variables to the container, using --build-arg.
 RUN echo "DATABASE_URL=$DATABASE_URL" >> .env
 RUN echo "ROOT_DIRECTORY=$MUSIC_DIRECTORY" >> .env
+RUN echo "INDEXER_IGNORE_PATTERN=$INDEXER_IGNORE_PATTERN" >> .env
 
 # Generate Prisma artifacts and client.
 RUN npm run prisma:generate
