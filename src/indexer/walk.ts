@@ -4,6 +4,10 @@ import { parseFile } from "music-metadata";
 
 import { prisma } from "../prisma";
 
+const IGNORE_PATTERNS = (process.env.INDEXER_IGNORE_PATTERN || ".cache").split(
+  ","
+);
+
 const BLACKLISTED_DIRS = ["@eaDir"];
 
 const onWalkDirectory: WalkStatEventCallback = async (
@@ -15,11 +19,12 @@ const onWalkDirectory: WalkStatEventCallback = async (
   const directoryPath = path.join(root, directoryName);
 
   const isBlacklisted =
-    BLACKLISTED_DIRS.findIndex((d) =>
+    [...BLACKLISTED_DIRS, ...IGNORE_PATTERNS].findIndex((d) =>
       directoryPath.toLowerCase().includes(d.toLowerCase())
     ) > -1;
 
   if (isBlacklisted || fileStats.isSymbolicLink()) {
+    console.log("[Indexer] Ignoring directory:", directoryName);
     next();
     return;
   }
