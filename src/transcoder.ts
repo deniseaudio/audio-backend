@@ -10,28 +10,16 @@ export function transcode(
   bitrate: number,
   hlsTime: number = 30
 ): Promise<string> {
-  const playlistFilename = `${song.id}-${bitrate}kbps.m3u8`;
+  const playlistFile = path.join(
+    CACHE_DIRECTORY,
+    `${song.id}-${bitrate}kbps.m3u8`
+  );
 
-  const songFolder = path.join(CACHE_DIRECTORY, song.id.toString());
-  const bitrateFolder = path.join(songFolder, `${bitrate}kbps`);
-  const playlistFile = path.join(bitrateFolder, playlistFilename);
-
-  const hasSongFolder = fs.existsSync(songFolder);
-  const hasBitrateFolder = fs.existsSync(bitrateFolder);
+  const hasPlaylistFile = fs.existsSync(playlistFile);
 
   // Check if we have already done this transcoding.
-  // - Verify if we have `${CACHE_DIRECTORY}/${song.id}` folder.
-  // - Verify if we have `${CACHE_DIRECTORY}/${song.id}/${bitrate}kbps` folder.
-  if (hasSongFolder && hasBitrateFolder) {
-    return Promise.resolve(path.join(bitrateFolder, playlistFilename));
-  }
-
-  if (!hasSongFolder) {
-    fs.mkdirSync(songFolder);
-  }
-
-  if (!hasBitrateFolder) {
-    fs.mkdirSync(bitrateFolder);
+  if (hasPlaylistFile) {
+    return Promise.resolve(playlistFile);
   }
 
   const ffmpeg = FluentFfmpeg();

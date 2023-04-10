@@ -56,8 +56,6 @@ app.get("/stream/:songId/:bitrate/:fileName", async (req, res) => {
 
   const songPath = path.join(
     CACHE_DIRECTORY,
-    songId,
-    `${bitrate}kbps`,
     fileName === "playlist" ? `${songId}-${bitrate}kbps.m3u8` : fileName
   );
 
