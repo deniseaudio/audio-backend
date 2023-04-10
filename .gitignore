@@ -27,3 +27,6 @@ pnpm-debug.log*
 
 # TypeScript output
 tsconfig.app.tsbuildinfo
+
+# Custom
+DEPLOYMENT.md
