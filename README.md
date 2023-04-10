@@ -21,7 +21,8 @@
 
 2. Run the Docker image:
 
-  - `/Users/example/Desktop/Music`: the path to the music directory on the host machine, this will be mounted as a volume in the container.
+  - `-v /Users/example/Desktop/Music`: the path to the music directory on the host machine, this will be mounted as a volume in the container.
+  - `-p 3003:3000`: the port to expose on the host machine. **Note**: if using with Nginx, use `127.0.0.1:8000:3000`.
 
   ```shell
   docker run -p 3003:3000 \
@@ -29,8 +30,6 @@
     -v /Users/example/Desktop/Music:/usr/src/app/media \
     -d totominc/deniseaudio-backend
   ```
-
-  - **Note**: if using with Nginx, use the following port `127.0.0.1:8000:3000`
 
 3. `docker ps` to check if the container is running.
 
@@ -58,4 +57,28 @@
 
   ```shell
   npm run dev
+  ```
+
+## Volume storage with DigitalOcean Spaces
+
+DigitalOcean Spaces can be used to store the music files.
+
+1. Follow this tutorial to create a Space, generate API keys and mount the remote Space folder into your Droplet: https://simplebackups.com/blog/mounting-digitalocean-spaces-and-access-bucket-from-droplet/
+
+  - To mount the remote Space folder into the Droplet:
+
+    ```
+    s3fs denisemedia /media/denisemedia \
+      -o passwd_file=${HOME}/.passwd-s3fs \
+      -o url=https://fra1.digitaloceanspaces.com/ \
+      -o use_path_request_style
+    ```
+
+2. Restart the Docker image and edit the exposed volume by pointing it to the mounted DigitalOcean Spaces volume:
+
+  ```shell
+  docker run -p 3003:3000 \
+    --restart=on-failure \
+    -v /media/denisemedia:/usr/src/app/media \
+    -d totominc/deniseaudio-backend
   ```
