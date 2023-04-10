@@ -11,12 +11,14 @@
   - `GITHUB_NPM_TOKEN`: the GitHub token to access private npm packages (used for a custom ESLint config).
   - `DATABASE_URL`: the database URL, can be a file path (`file:./dev.db`) or a remote URL.
   - `MUSIC_DIRECTORY`: the path to the music directory **in the container**.
+  - `INDEXER_IGNORE_PATTERN`: comma-separated list of directory patterns to ignore when indexing the music directory.
 
   ```shell
   docker build \
     --build-arg GITHUB_NPM_TOKEN='${TOKEN}' \
     --build-arg DATABASE_URL='file:./dev.db' \
     --build-arg MUSIC_DIRECTORY='/usr/src/app/media' \
+    --build-arg INDEXER_IGNORE_PATTERN=".cache" \
     -t totominc/deniseaudio-backend \
     .
   ```
@@ -79,7 +81,7 @@ DigitalOcean Spaces can be used to store the music files.
 2. Restart the Docker image and edit the exposed volume by pointing it to the mounted DigitalOcean Spaces volume:
 
   ```shell
-  docker run -p 3003:3000 \
+  docker run -p 127.0.0.1:8000:3000 \
     --restart=on-failure \
     -v /media/denisemedia:/usr/src/app/media \
     -d totominc/deniseaudio-backend
