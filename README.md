@@ -4,6 +4,8 @@
 
 ## Running the server with Docker
 
+**Note**: if you want to host in production inside a DigitalOcean Droplet, I like to use [this guide](https://flaviocopes.com/how-to-self-host-plausible-analytics/) to setup a basic Docker-based Droplet with Nginx & Let's Encrypt SSL. Make sure to adjust specific parts of the guide and skip everything related to `docker-compose` _(we're using a single Docker image here)_.
+
 1. Build the Docker image with build-args:
 
   - `GITHUB_NPM_TOKEN`: the GitHub token to access private npm packages (used for a custom ESLint config).
@@ -33,7 +35,7 @@
 
 3. `docker ps` to check if the container is running.
 
-## Running locally
+## Running locally (without Docker)
 
 1. Install dependencies:
 
