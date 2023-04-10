@@ -30,6 +30,8 @@
     -d totominc/deniseaudio-backend
   ```
 
+  - **Note**: if using with Nginx, use the following port `127.0.0.1:8000:3000`
+
 3. `docker ps` to check if the container is running.
 
 ## Running locally
